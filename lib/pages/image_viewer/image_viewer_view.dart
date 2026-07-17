@@ -205,7 +205,13 @@ class _ZoomableImageState extends State<_ZoomableImage> {
       onInteractionStart: (_) {
         widget.onZoomStatusChanged(true);
       },
-      // When interaction ends, check if we are still zoomed in
+      // Lock PageView scroll if multiple fingers are used or if we are zoomed in.
+      onInteractionUpdate: (details) {
+        if (details.pointerCount > 1 || _transformController.value.row0[0] != 1.0) {
+          widget.onZoomStatusChanged(true);
+        }
+      },
+      // When interaction ends, check if we are still zoomed in.
       onInteractionEnd: (details) {
         widget.controller.onInteractionEnds(details);
 
